@@ -3,12 +3,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 
 const json = (body: unknown, status = 200) => NextResponse.json(body, { status, headers: { 'Cache-Control': 'no-store' } });
+type CartInput = { productId: string; quantity: number };
 
 export async function POST(request: NextRequest) {
   if (process.env.ENABLE_LIVE_ORDERS !== 'true') return json({ error: 'Live ordering is not enabled yet' }, 503);
   try {
     const body = await request.json();
-    const items = Array.isArray(body.items) ? body.items.map((item: { productId?: string; quantity?: number }) => ({ productId: String(item.productId ?? ''), quantity: Number(item.quantity) })) : [];
+    const items: CartInput[] = Array.isArray(body.items) ? body.items.map((item: { productId?: string; quantity?: number }): CartInput => ({ productId: String(item.productId ?? ''), quantity: Number(item.quantity) })) : [];
     const productId = String(body.productId ?? items[0]?.productId ?? '');
     const serviceDateId = String(body.serviceDateId ?? '');
     const pickupWindowId = String(body.pickupWindowId ?? '');
