@@ -8,7 +8,8 @@ export async function POST(request: NextRequest) {
   if (process.env.ENABLE_LIVE_ORDERS !== 'true') return json({ error: 'Live ordering is not enabled yet' }, 503);
   try {
     const body = await request.json();
-    const productId = String(body.productId ?? '');
+    const items = Array.isArray(body.items) ? body.items.map((item: { productId?: string; quantity?: number }) => ({ productId: String(item.productId ?? ''), quantity: Number(item.quantity) })) : [];
+    const productId = String(body.productId ?? items[0]?.productId ?? '');
     const serviceDateId = String(body.serviceDateId ?? '');
     const pickupWindowId = String(body.pickupWindowId ?? '');
     const customerName = String(body.customerName ?? '').trim();
@@ -18,7 +19,8 @@ export async function POST(request: NextRequest) {
     const deliveryPostcode = String(body.deliveryPostcode ?? '').trim();
     const deliveryNotes = String(body.deliveryNotes ?? '').trim();
     const quantity = Number(body.quantity);
-    if (!productId || !serviceDateId || !pickupWindowId || !customerName || !whatsappPhone || !Number.isInteger(quantity) || quantity < 1 || quantity > 15 || (fulfillmentType === 'delivery' && (!deliveryAddress || !deliveryPostcode))) {
+    const normalizedItems = items.length ? items : [{ productId, quantity }];
+    if (!normalizedItems.length || normalizedItems.some((item) => !item.productId || !Number.isInteger(item.quantity) || item.quantity < 1) || !serviceDateId || !pickupWindowId || !customerName || !whatsappPhone || (fulfillmentType === 'delivery' && (!deliveryAddress || !deliveryPostcode))) {
       return json({ error: 'Please provide valid order details' }, 400);
     }
 
@@ -29,7 +31,20 @@ export async function POST(request: NextRequest) {
     const paymentMinutes = Number(process.env.PAYMENT_RESERVATION_MINUTES ?? 30);
     const paymentDeadline = new Date(Date.now() + Math.min(Math.max(paymentMinutes, 5), 60) * 60_000).toISOString();
     const supabase = getSupabaseAdmin();
-    const { data, error } = await supabase.rpc('create_order_reservation', {
+    const { data, error } = await supabase.rpc(items.length ? 'create_cart_order_reservation' : 'create_order_reservation', items.length ? {
+      p_items: normalizedItems,
+      p_idempotency_key: idempotencyKey,
+      p_service_date_id: serviceDateId,
+      p_pickup_window_id: pickupWindowId,
+      p_customer_name: customerName,
+      p_whatsapp_phone: whatsappPhone,
+      p_public_token_hash: tokenHash,
+      p_payment_deadline: paymentDeadline,
+      p_fulfillment_type: fulfillmentType,
+      p_delivery_address: deliveryAddress || null,
+      p_delivery_postcode: deliveryPostcode || null,
+      p_delivery_notes: deliveryNotes || null,
+    } : {
       p_idempotency_key: idempotencyKey,
       p_product_id: productId,
       p_service_date_id: serviceDateId,
