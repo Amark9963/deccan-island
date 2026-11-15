@@ -1,3 +1,5 @@
 .brand-logo{display:block;width:185px}.brand-logo img{display:block;width:100%;height:auto}.footer-logo{filter:brightness(0) invert(1);opacity:.95}
 .hero-food{display:block;width:100%;height:320px;object-fit:cover}.dish-visual{overflow:hidden;display:block}.dish-visual img{display:block;width:100%;height:100%;min-height:460px;object-fit:cover;object-position:center}.hero-card{overflow:hidden}
 @media(max-width:700px){.hero-food{height:270px}.dish-visual img{min-height:290px}}
+body{overflow-x:hidden}.hero-card,.dish-card{max-width:100%}
+@media(max-width:700px){.hero-card{transform:none;width:100%;padding:16px}.hero-food{height:270px}.dish-card{overflow:hidden}.dish-visual img{min-height:290px}}
