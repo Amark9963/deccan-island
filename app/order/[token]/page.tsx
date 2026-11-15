@@ -18,7 +18,7 @@ export default async function OrderStatusPage({ params }: { params: { token: str
   let order;
   try {
     const supabase = getSupabaseAdmin();
-    const result = await supabase.from('orders').select('order_reference,status,payment_status,quantity,total_myr,payment_deadline,created_at,products(name),service_dates(service_date),pickup_windows(starts_at,ends_at)').eq('public_token_hash', tokenHash).maybeSingle();
+    const result = await supabase.from('orders').select('order_reference,status,payment_status,quantity,total_myr,payment_deadline,created_at,fulfillment_type,delivery_status,delivery_address,delivery_postcode,delivery_notes,products(name),service_dates(service_date),pickup_windows(starts_at,ends_at)').eq('public_token_hash', tokenHash).maybeSingle();
     if (result.error) throw result.error;
     order = result.data;
   } catch (error) {
