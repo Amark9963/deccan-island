@@ -1,0 +1,2 @@
+'use client';
+export default function AdminDateActions({ id, enabled }: { id: string; enabled: boolean }) { async function toggle() { await fetch(`/api/admin/service-dates/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ enabled: !enabled }) }); window.location.reload(); } return <button className="admin-toggle" onClick={toggle}>{enabled ? 'Close date' : 'Enable date'}</button>; }
