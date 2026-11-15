@@ -8,7 +8,7 @@ export async function GET() {
     const supabase = getSupabaseAdmin();
     const { data, error } = await supabase
       .from('service_dates')
-      .select('id, service_date, daily_capacity, booking_deadline, pickup_windows(id, starts_at, ends_at, capacity)')
+      .select('id, service_date, daily_capacity, booking_deadline, pickup_windows(id, starts_at, ends_at, capacity), products(id, name, price_myr)')
       .eq('enabled', true)
       .gte('service_date', new Date().toISOString().slice(0, 10))
       .order('service_date', { ascending: true });
