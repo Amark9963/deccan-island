@@ -11,7 +11,7 @@ export async function GET() {
       .select('id, service_date, daily_capacity, booking_deadline')
       .eq('enabled', true)
       .gte('service_date', new Date().toISOString().slice(0, 10))
-      .order('service_date', { ascending: true }), supabase.from('pickup_windows').select('id, service_date_id, starts_at, ends_at, capacity').eq('enabled', true).order('starts_at', { ascending: true }), supabase.from('products').select('id, name, description, price_myr').eq('active', true).order('created_at', { ascending: true })]);
+      .order('service_date', { ascending: true }), supabase.from('pickup_windows').select('id, service_date_id, starts_at, ends_at, capacity').eq('enabled', true).order('starts_at', { ascending: true }), supabase.from('products').select('id, name, description, price_myr, image_url').eq('active', true).order('created_at', { ascending: true })]);
     if (error) throw error; if (windowError) throw windowError; if (productError) throw productError;
     return NextResponse.json({ dates: (data ?? []).map((date) => ({ ...date, pickup_windows: (windows ?? []).filter((window) => window.service_date_id === date.id).map(({ service_date_id, ...window }) => window), products: products ?? [] })), timezone: 'Asia/Kuala_Lumpur' }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
