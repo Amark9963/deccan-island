@@ -13,8 +13,12 @@ export async function POST(request: NextRequest) {
     const pickupWindowId = String(body.pickupWindowId ?? '');
     const customerName = String(body.customerName ?? '').trim();
     const whatsappPhone = String(body.whatsappPhone ?? '').trim();
+    const fulfillmentType = body.fulfillmentType === 'delivery' ? 'delivery' : 'pickup';
+    const deliveryAddress = String(body.deliveryAddress ?? '').trim();
+    const deliveryPostcode = String(body.deliveryPostcode ?? '').trim();
+    const deliveryNotes = String(body.deliveryNotes ?? '').trim();
     const quantity = Number(body.quantity);
-    if (!productId || !serviceDateId || !pickupWindowId || !customerName || !whatsappPhone || !Number.isInteger(quantity) || quantity < 1 || quantity > 15) {
+    if (!productId || !serviceDateId || !pickupWindowId || !customerName || !whatsappPhone || !Number.isInteger(quantity) || quantity < 1 || quantity > 15 || (fulfillmentType === 'delivery' && (!deliveryAddress || !deliveryPostcode))) {
       return json({ error: 'Please provide valid order details' }, 400);
     }
 
@@ -35,6 +39,10 @@ export async function POST(request: NextRequest) {
       p_whatsapp_phone: whatsappPhone,
       p_public_token_hash: tokenHash,
       p_payment_deadline: paymentDeadline,
+      p_fulfillment_type: fulfillmentType,
+      p_delivery_address: deliveryAddress || null,
+      p_delivery_postcode: deliveryPostcode || null,
+      p_delivery_notes: deliveryNotes || null,
     });
     if (error) throw error;
     const order = Array.isArray(data) ? data[0] : data;
