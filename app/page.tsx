@@ -1,3 +1,7 @@
+'use client';
+
+import { useState } from 'react';
+
 const steps = [
   ['01', 'Choose your weekend', 'Pick an available Friday, Saturday or Sunday and a 30-minute collection window.'],
   ['02', 'Reserve your portions', 'Tell us how many portions you would like and share a WhatsApp contact.'],
@@ -5,8 +9,11 @@ const steps = [
 ];
 
 export default function Home() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
   return <main>
-    <header className="nav"><a className="brand-logo" href="#top"><img src="/deccan-island-logo.svg" alt="Deccan Island — Hyderabadi Dum Kitchen" /></a><nav><a href="#menu">Menu</a><a href="#how">How it works</a><a href="#pickup">Pickup</a></nav><a className="button button-small" href="#preorder">Pre-order</a></header>
+    <header className="nav"><a className="brand-logo" href="#top" onClick={closeMenu}><img src="/deccan-island-logo.svg" alt="Deccan Island — Hyderabadi Dum Kitchen" /></a><nav className="desktop-nav"><a href="#menu">Menu</a><a href="#how">How it works</a><a href="#pickup">Pickup</a></nav><a className="button button-small desktop-order" href="#preorder">Pre-order</a><button className="mobile-menu-button" aria-expanded={menuOpen} aria-controls="mobile-menu" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? 'Close' : 'Menu'} <span>{menuOpen ? '×' : '☰'}</span></button></header>
+    {menuOpen && <nav id="mobile-menu" className="mobile-menu"><a href="#menu" onClick={closeMenu}>Menu <span>01</span></a><a href="#how" onClick={closeMenu}>How it works <span>02</span></a><a href="#pickup" onClick={closeMenu}>Pickup <span>03</span></a><a href="#preorder" onClick={closeMenu}>Pre-order <span>→</span></a></nav>}
     <section id="top" className="hero section-wrap"><div className="hero-copy"><p className="eyebrow">Small-batch weekend kitchen · Penang Island</p><h1>Slow dum.<br/><em>Deeply satisfying.</em></h1><p className="hero-text">Authentic Hyderabadi chicken dum biryani, cooked with patience and packed for your weekend table.</p><a className="button" href="#preorder">Pre-order for the weekend <span>→</span></a><p className="fine-print">One dish. Freshly prepared. Limited portions.</p></div><div className="hero-card"><img className="hero-food" src="/chicken-dum-biryani.png" alt="Hyderabadi chicken dum biryani with raita"/><p>Hyderabadi Chicken Dum Biryani</p><small>Chicken · fragrant rice · raita</small></div></section>
     <section id="menu" className="menu-section section-wrap"><div className="section-intro"><p className="eyebrow">The weekend menu</p><h2>One good thing,<br/><em>done properly.</em></h2></div><article className="dish-card"><div className="dish-visual"><img src="/chicken-dum-biryani.png" alt="Chicken dum biryani served with raita"/></div><div className="dish-details"><div><p className="eyebrow">01 · The original</p><h3>Hyderabadi Chicken<br/>Dum Biryani</h3></div><p>Layered basmati rice, tender chicken and freshly pounded whole spices, finished on a traditional dum.</p><div className="dish-meta"><strong>RM22 <small>/ portion</small></strong><span>Includes raita</span></div><a className="text-link" href="#preorder">Choose a pickup time <span>→</span></a></div></article></section>
     <section id="how" className="dark-section"><div className="section-wrap"><div className="section-intro light"><p className="eyebrow">Keep it simple</p><h2>From our pot<br/><em>to your table.</em></h2></div><div className="steps">{steps.map(([number,title,body]) => <div className="step" key={number}><span>{number}</span><h3>{title}</h3><p>{body}</p></div>)}</div></div></section>
