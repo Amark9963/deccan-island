@@ -3,3 +3,4 @@
 @media(max-width:700px){.hero-food{height:270px}.dish-visual img{min-height:290px}}
 body{overflow-x:hidden}.hero-card,.dish-card{max-width:100%}
 @media(max-width:700px){.hero-card{transform:none;width:100%;padding:16px}.hero-food{height:270px}.dish-card{overflow:hidden}.dish-visual img{min-height:290px}}
+@media(max-width:700px){.nav{gap:10px}.nav .brand-logo{width:142px;flex-shrink:0}.nav nav{display:flex;gap:10px;font-size:10px;white-space:nowrap}.nav nav a{color:var(--green)}.nav>.button{display:none}}
