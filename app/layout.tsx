@@ -1,5 +1,6 @@
 import './globals.css';
 import './brand-overrides.css';
+import './mobile-polish.css';
 import type { Metadata } from 'next';
 import MobileNavigation from './MobileNavigation';
 
