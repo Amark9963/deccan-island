@@ -1,0 +1,5 @@
+'use client';
+import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import './mobile-nav.css';
+export default function MobileNavigation() { const pathname = usePathname(); const [count, setCount] = useState(0); useEffect(() => { const sync = () => { try { const cart = JSON.parse(localStorage.getItem('deccan-cart') || '{}'); setCount(Object.values(cart).reduce((sum, value) => sum + Number(value), 0)); } catch { setCount(0); } }; sync(); window.addEventListener('storage', sync); return () => window.removeEventListener('storage', sync); }, [pathname]); if (pathname.startsWith('/admin') || pathname.startsWith('/order/')) return null; return <nav className="mobile-nav" aria-label="Mobile navigation"><a className={pathname === '/' ? 'active' : ''} href="/"><span>⌂</span>Home</a><a className={pathname.startsWith('/menu') ? 'active' : ''} href="/menu"><span>☷</span>Menu</a><a className="mobile-nav-cart" href="/pre-order"><span>＋</span>Cart{count > 0 && <b>{count}</b>}</a><a className={pathname.startsWith('/pre-order') ? 'active' : ''} href="/pre-order"><span>→</span>Checkout</a></nav>; }
