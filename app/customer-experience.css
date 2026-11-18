@@ -99,6 +99,101 @@ a {
   box-shadow: var(--di-shadow-card);
 }
 
+/* Homepage */
+.home-header {
+  align-items: center;
+  background: rgba(247, 238, 221, .96);
+  border-bottom: 1px solid var(--di-line);
+  display: flex;
+  height: 78px;
+  justify-content: space-between;
+  padding: 0 var(--di-page-pad);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.home-header nav {
+  display: flex;
+  gap: 32px;
+}
+
+.home-header nav a,
+.home-header-order {
+  color: var(--green);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.home-header nav a {
+  padding: 12px 0;
+}
+
+.home-header-order {
+  align-items: center;
+  border-bottom: 1px solid var(--green);
+  display: inline-flex;
+  font-weight: 700;
+  gap: 18px;
+  min-height: 44px;
+}
+
+.home-page .hero-card {
+  border-radius: var(--di-radius-lg);
+  box-shadow: var(--di-shadow-card);
+  margin: 0;
+}
+
+.home-page .hero-food,
+.home-page .dish-card,
+.home-page .dish-visual img,
+.home-page .method-image-wrap {
+  border-radius: var(--di-radius-md);
+}
+
+.home-page .dish-card {
+  overflow: hidden;
+}
+
+.home-page .order-strip {
+  border: 1px solid var(--di-line);
+  border-left: 3px solid var(--copper);
+  border-radius: var(--di-radius-md);
+  box-shadow: 0 12px 34px rgba(31, 74, 50, .06);
+}
+
+.home-page .step {
+  border-color: rgba(247, 238, 221, .28);
+}
+
+.home-page .faq-list details:last-child {
+  border-bottom: 1px solid #cdbb9e;
+}
+
+/* Order status */
+.status-wrap {
+  max-width: 820px;
+  padding-left: var(--di-page-pad);
+  padding-right: var(--di-page-pad);
+}
+
+.status-card {
+  margin-top: 46px;
+}
+
+.status-pill {
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.status-grid > div {
+  min-width: 0;
+}
+
+.status-grid strong {
+  overflow-wrap: anywhere;
+}
+
 /* Customer journey layout */
 .menu-wrap,
 .cart-wrap {
@@ -235,6 +330,128 @@ a {
 
   .customer-header-action {
     font-size: 11px;
+  }
+
+  .home-header {
+    backdrop-filter: blur(16px);
+    height: 68px;
+    padding: 0 var(--di-page-pad);
+  }
+
+  .home-header .brand-logo {
+    width: 142px;
+  }
+
+  .home-header nav {
+    display: none;
+  }
+
+  .home-header-order {
+    border: 1px solid var(--di-line);
+    border-radius: 999px;
+    font-size: 10px;
+    gap: 8px;
+    min-height: 38px;
+    padding: 0 13px;
+  }
+
+  .home-page .hero {
+    gap: 32px;
+    padding-bottom: 48px;
+    padding-top: 42px;
+  }
+
+  .home-page .hero h1 {
+    font-size: clamp(46px, 14vw, 56px);
+  }
+
+  .home-page .hero-text {
+    max-width: 34ch;
+  }
+
+  .home-page .hero-card {
+    padding: 10px;
+  }
+
+  .home-page .hero-card figcaption {
+    padding: 0 5px 5px;
+  }
+
+  .home-page .order-strip {
+    margin-bottom: 70px !important;
+  }
+
+  .home-page .menu-section,
+  .home-page .pickup,
+  .home-page .faq {
+    padding-left: var(--di-page-pad);
+    padding-right: var(--di-page-pad);
+  }
+
+  .home-page .section-intro h2,
+  .home-page .method-heading h2,
+  .home-page .story-copy h2,
+  .home-page .pickup h2,
+  .home-page .faq h2 {
+    font-size: clamp(42px, 12vw, 50px);
+    letter-spacing: -2px;
+  }
+
+  .home-page .dish-details {
+    padding: 28px 22px 30px;
+  }
+
+  .home-page .dish-details h3 {
+    font-size: 32px;
+  }
+
+  .home-page .method-card {
+    border-top-color: var(--di-line);
+  }
+
+  .home-page .step {
+    background: rgba(247, 238, 221, .04);
+    border: 1px solid rgba(247, 238, 221, .16);
+    border-radius: var(--di-radius-md);
+    padding: 20px;
+  }
+
+  .home-page .step h3 {
+    margin-top: 22px;
+  }
+
+  .home-page .story-mark {
+    background: var(--di-surface-muted);
+  }
+
+  .status-wrap {
+    padding-top: 42px;
+  }
+
+  .status-card {
+    margin-top: 32px;
+  }
+
+  .status-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .status-actions .button {
+    justify-content: space-between;
+  }
+
+  .mobile-nav a span {
+    font-size: 10px;
+  }
+
+  .mobile-nav a[aria-current="page"]::after {
+    background: var(--copper);
+    border-radius: 999px;
+    bottom: 3px;
+    content: '';
+    height: 2px;
+    position: absolute;
+    width: 18px;
   }
 
   .customer-intro h1 {

@@ -9,5 +9,9 @@ export default function MobileNavigation() {
   const pathname = usePathname(); const [count,setCount] = useState(0);
   useEffect(() => { const sync = () => { try { const cart = JSON.parse(localStorage.getItem('deccan-cart') || '{}') as Record<string,number>; setCount(Object.values(cart).reduce((sum,value) => sum + Number(value), 0)); } catch { setCount(0); } }; sync(); window.addEventListener('storage',sync); window.addEventListener('cart-updated',sync); return () => { window.removeEventListener('storage',sync); window.removeEventListener('cart-updated',sync); }; }, [pathname]);
   if (pathname.startsWith('/admin') || pathname.startsWith('/order/') || pathname.startsWith('/pre-order')) return null;
-  return <nav className="mobile-nav" aria-label="Primary navigation"><a className={pathname==='/'?'active':''} href="/"><Icon name="home"/><span>Home</span></a><a className={pathname.startsWith('/menu')?'active':''} href="/menu"><Icon name="menu"/><span>Menu</span></a><a className={pathname.startsWith('/cart')?'active mobile-nav-cart':'mobile-nav-cart'} href="/cart"><Icon name="bag"/><span>Cart</span>{count>0&&<b>{count}</b>}</a></nav>;
+  return <nav className="mobile-nav" aria-label="Primary navigation">
+    <a className={pathname==='/'?'active':''} aria-current={pathname==='/'?'page':undefined} href="/"><Icon name="home"/><span>Home</span></a>
+    <a className={pathname.startsWith('/menu')?'active':''} aria-current={pathname.startsWith('/menu')?'page':undefined} href="/menu"><Icon name="menu"/><span>Menu</span></a>
+    <a className={pathname.startsWith('/cart')?'active mobile-nav-cart':'mobile-nav-cart'} aria-current={pathname.startsWith('/cart')?'page':undefined} href="/cart"><Icon name="bag"/><span>Cart</span>{count>0&&<b>{count}</b>}</a>
+  </nav>;
 }
