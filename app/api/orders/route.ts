@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     const items: CartInput[] = Array.isArray(body.items) ? body.items.map((item: { productId?: string; quantity?: number }): CartInput => ({ productId: String(item.productId ?? ''), quantity: Number(item.quantity) })) : [];
     const productId = String(body.productId ?? items[0]?.productId ?? '');
     const serviceDateId = String(body.serviceDateId ?? '');
-    const pickupWindowId = String(body.pickupWindowId ?? '');
+    const pickupWindowId = body.pickupWindowId ? String(body.pickupWindowId) : null;
     const customerName = String(body.customerName ?? '').trim();
     const whatsappPhone = String(body.whatsappPhone ?? '').trim();
     const fulfillmentType = body.fulfillmentType === 'delivery' ? 'delivery' : 'pickup';
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     const deliveryNotes = String(body.deliveryNotes ?? '').trim();
     const quantity = Number(body.quantity);
     const normalizedItems = items.length ? items : [{ productId, quantity }];
-    if (!normalizedItems.length || normalizedItems.some((item) => !item.productId || !Number.isInteger(item.quantity) || item.quantity < 1) || !serviceDateId || !pickupWindowId || !customerName || !whatsappPhone || (fulfillmentType === 'delivery' && (!deliveryAddress || !deliveryPostcode))) {
+    if (!normalizedItems.length || normalizedItems.some((item) => !item.productId || !Number.isInteger(item.quantity) || item.quantity < 1) || !serviceDateId || (fulfillmentType === 'pickup' && !pickupWindowId) || !customerName || !whatsappPhone || (fulfillmentType === 'delivery' && (!deliveryAddress || !deliveryPostcode))) {
       return json({ error: 'Please provide valid order details' }, 400);
     }
 
