@@ -64,7 +64,7 @@ export default function PreOrderForm() {
   if (!cart.length) return <section className="checkout-status"><strong>Your cart is empty.</strong><p>Choose your dishes from the menu before selecting a service date.</p><a className="button" href="/menu">Browse the menu <span>→</span></a></section>;
 
   return <div className="checkout-form-content">
-    <div className="checkout-steps"><span className={step>=1?'active':''}>01 Service</span><span className={step>=2?'active':''}>02 Details</span><span className={step>=3?'active':''}>03 Payment</span></div>
+    <div className="checkout-steps" aria-label={`Checkout step ${step} of 3`}><span className={step>=1?'active':''}>01 Receive</span><span className={step>=2?'active':''}>02 Details</span><span className={step>=3?'active':''}>03 Review</span></div>
     {step === 1 ? <section>
       <div className="checkout-heading"><p className="eyebrow">01 · Service</p><h2>How would you like it?</h2><p className="checkout-muted">Choose pickup or delivery to continue.</p></div>
       <div className="order-summary">{cart.map(item => <div className="order-summary-item" key={item.id}>{item.image_url && <img src={item.image_url} alt=""/>}<span>{item.quantity} × {item.name}</span><strong>RM{(Number(item.price_myr)*item.quantity).toFixed(2)}</strong></div>)}<div className="order-summary-total"><span>{totalQty} item{totalQty===1?'':'s'}</span><strong>RM{total.toFixed(2)}</strong></div></div>
