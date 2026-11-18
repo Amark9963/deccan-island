@@ -1,5 +1,6 @@
 'use client';
 import { FormEvent, useEffect, useState } from 'react';
+import { resolveProductImage } from '@/lib/product-image';
 
 type Product = { id:string; name:string; description:string; price_myr:number; image_url?:string };
 type Window = { id:string; starts_at:string; ends_at:string; capacity:number };
@@ -87,7 +88,7 @@ export default function PreOrderForm() {
     <div className="checkout-steps" aria-label={`Checkout step ${step} of 3`}><span className={step>=1?'active':''}>01 Receive</span><span className={step>=2?'active':''}>02 Details</span><span className={step>=3?'active':''}>03 Review</span></div>
     {step === 1 ? <section>
       <div className="checkout-heading"><p className="eyebrow">01 · Service</p><h2>How would you like it?</h2><p className="checkout-muted">Choose pickup or delivery to continue.</p></div>
-      <div className="order-summary">{cart.map(item => <div className="order-summary-item" key={item.id}>{item.image_url && <img src={item.image_url} alt=""/>}<span>{item.quantity} × {item.name}</span><strong>RM{(Number(item.price_myr)*item.quantity).toFixed(2)}</strong></div>)}<div className="order-summary-total"><span>{totalQty} item{totalQty===1?'':'s'}</span><strong>RM{total.toFixed(2)}</strong></div></div>
+      <div className="order-summary">{cart.map(item => <div className="order-summary-item" key={item.id}>{resolveProductImage(item) && <img src={resolveProductImage(item)} alt=""/>}<span>{item.quantity} × {item.name}</span><strong>RM{(Number(item.price_myr)*item.quantity).toFixed(2)}</strong></div>)}<div className="order-summary-total"><span>{totalQty} item{totalQty===1?'':'s'}</span><strong>RM{total.toFixed(2)}</strong></div></div>
       <fieldset className="fulfillment-choice"><legend>Receive your order</legend><div className="fulfillment-options">
         <label className={fulfillment==='pickup'?'selected':''}><input type="radio" name="fulfillment" checked={fulfillment==='pickup'} onChange={() => selectFulfillment('pickup')}/><span><b>Self-pickup</b><small>Choose a date and collection time</small></span></label>
         <label className={fulfillment==='delivery'?'selected':''}><input type="radio" name="fulfillment" checked={fulfillment==='delivery'} onChange={() => selectFulfillment('delivery')}/><span><b>Delivery request</b><small>Choose a date; timing is confirmed by WhatsApp</small></span></label>

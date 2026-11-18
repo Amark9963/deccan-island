@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import CustomerHeader from '../components/CustomerHeader';
 import PageIntro from '../components/PageIntro';
+import { resolveProductImage } from '@/lib/product-image';
 type Product = { id:string; name:string; description:string; price_myr:number; image_url?:string };
 export default function MenuClient() {
   const [products,setProducts] = useState<Product[]>([]); const [cart,setCart] = useState<Record<string,number>>({}); const [loading,setLoading] = useState(true);
@@ -14,7 +15,7 @@ export default function MenuClient() {
       <PageIntro eyebrow="Small-batch weekend kitchen" title="This weekend’s" accent="menu." description="Prepared in limited batches in Penang. Choose your dishes first, then select pickup or delivery." />
       {loading ? <p className="menu-state">Loading this weekend’s menu…</p> : products.length ? <div className="menu-grid">
         {products.map(product => <article className="menu-card customer-card" key={product.id}>
-          {product.image_url && <img src={product.image_url} alt={product.name} />}
+          {resolveProductImage(product) && <img src={resolveProductImage(product)} alt={product.name} />}
           <div className="menu-card-body">
             <div><h2>{product.name}</h2><p>{product.description}</p></div>
             <strong>RM{Number(product.price_myr).toFixed(2)}</strong>
