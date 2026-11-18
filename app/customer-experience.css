@@ -274,6 +274,120 @@ a {
   border-color: var(--copper);
 }
 
+.date-time-fields {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.date-slot-field,
+.time-slot-field {
+  margin: 0;
+}
+
+.field-label {
+  color: var(--green);
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 9px;
+}
+
+.date-slot-list {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.time-slot-list {
+  display: grid;
+  gap: 8px;
+}
+
+.date-slot,
+.time-slot {
+  border: 1px solid var(--di-line);
+  border-radius: var(--di-radius-sm);
+  color: var(--green);
+  cursor: pointer;
+  min-height: 54px;
+  padding: 12px;
+}
+
+.date-slot {
+  align-items: baseline;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  text-align: left;
+}
+
+.date-slot > span {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.date-slot > strong {
+  font: 600 26px/1 Fraunces;
+  grid-row: 1 / 3;
+}
+
+.date-slot > small {
+  color: var(--di-text-muted);
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.time-slot {
+  font-size: 13px;
+  text-align: center;
+  width: 100%;
+}
+
+.date-slot.selected,
+.time-slot.selected {
+  background: #f8e9d4;
+  border: 2px solid var(--copper);
+  padding: 11px;
+}
+
+.field-hint {
+  color: #8a806f;
+  font-size: 11px;
+  line-height: 1.5;
+  margin: 10px 0 0;
+}
+
+.fulfillment-hint {
+  border: 1px dashed var(--di-line);
+  border-radius: var(--di-radius-sm);
+  color: #8a806f;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 20px 0;
+  padding: 16px;
+}
+
+.delivery-schedule-note {
+  align-self: start;
+  border-left: 3px solid var(--copper);
+  border-radius: var(--di-radius-sm);
+  padding: 16px;
+}
+
+.delivery-schedule-note strong {
+  color: var(--green);
+  font: 18px Fraunces;
+}
+
+.delivery-schedule-note p {
+  color: var(--di-text-muted);
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 7px 0 0;
+}
+
 .fulfillment-options label,
 .date-slot,
 .time-slot,
@@ -282,6 +396,67 @@ a {
 .delivery-schedule-note,
 .fulfillment-hint {
   background: var(--di-surface);
+}
+
+.review-box {
+  gap: 0;
+  padding: 20px;
+}
+
+.review-items {
+  display: grid;
+  gap: 7px;
+  padding-bottom: 17px;
+}
+
+.review-row,
+.review-total {
+  align-items: start;
+  border-top: 1px solid var(--di-line);
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+  padding: 14px 0;
+}
+
+.review-row > span,
+.review-total > span {
+  color: #8a806f;
+  flex: 0 0 auto;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.review-row > strong {
+  font: 500 15px/1.35 Fraunces;
+  max-width: 70%;
+  text-align: right;
+}
+
+.review-total {
+  align-items: baseline;
+  padding-bottom: 0;
+}
+
+.review-total > strong {
+  color: var(--copper);
+  font: 600 30px Fraunces;
+}
+
+.checkout-error {
+  background: rgba(184, 88, 31, .08);
+  border-left: 3px solid var(--copper);
+  color: #7d3714;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 20px 0 0;
+  padding: 13px 15px;
+}
+
+.checkout-button:disabled,
+.text-button:disabled {
+  cursor: wait;
 }
 
 .fulfillment-options label,
@@ -521,6 +696,28 @@ a {
   .date-slot,
   .time-slot {
     min-height: 54px;
+  }
+
+  .date-time-fields {
+    display: block;
+  }
+
+  .date-slot-field,
+  .time-slot-field,
+  .delivery-schedule-note {
+    margin: 18px 0;
+  }
+
+  .date-slot-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .review-box {
+    padding: 17px;
+  }
+
+  .review-row > strong {
+    font-size: 14px;
   }
 }
 
