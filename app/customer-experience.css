@@ -945,10 +945,6 @@ a {
     margin-top: 22px;
   }
 
-  .home-page .story-mark {
-    background: var(--di-surface-muted);
-  }
-
   .home-page .story-section,
   .home-page .faq {
     padding-bottom: 84px;
