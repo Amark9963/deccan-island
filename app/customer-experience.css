@@ -493,6 +493,38 @@ a {
   display: block;
 }
 
+.checkout-service-date {
+  align-items: center;
+  background: var(--di-surface-muted);
+  border-radius: var(--di-radius-sm);
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+  padding: 16px 18px;
+}
+
+.checkout-service-date span {
+  color: var(--di-text-muted);
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.checkout-service-date strong {
+  display: block;
+  font: 500 20px/1.2 Fraunces;
+  margin-top: 5px;
+}
+
+.checkout-service-date a {
+  color: var(--copper);
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
 .date-slot-field,
 .time-slot-field {
   margin: 0;

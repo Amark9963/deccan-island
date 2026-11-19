@@ -32,25 +32,11 @@ export async function POST(request: NextRequest) {
     const paymentMinutes = Number(process.env.PAYMENT_RESERVATION_MINUTES ?? 30);
     const paymentDeadline = new Date(Date.now() + Math.min(Math.max(paymentMinutes, 5), 60) * 60_000).toISOString();
     const supabase = getSupabaseAdmin();
-    const { data, error } = await supabase.rpc(items.length ? 'create_cart_order_reservation' : 'create_order_reservation', items.length ? {
+    const { data, error } = await supabase.rpc('create_cart_order_reservation', {
       p_items: normalizedItems,
       p_idempotency_key: idempotencyKey,
       p_service_date_id: serviceDateId,
       p_pickup_window_id: pickupWindowId,
-      p_customer_name: customerName,
-      p_whatsapp_phone: whatsappPhone,
-      p_public_token_hash: tokenHash,
-      p_payment_deadline: paymentDeadline,
-      p_fulfillment_type: fulfillmentType,
-      p_delivery_address: deliveryAddress || null,
-      p_delivery_postcode: deliveryPostcode || null,
-      p_delivery_notes: deliveryNotes || null,
-    } : {
-      p_idempotency_key: idempotencyKey,
-      p_product_id: productId,
-      p_service_date_id: serviceDateId,
-      p_pickup_window_id: pickupWindowId,
-      p_quantity: quantity,
       p_customer_name: customerName,
       p_whatsapp_phone: whatsappPhone,
       p_public_token_hash: tokenHash,
