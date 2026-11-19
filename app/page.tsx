@@ -21,7 +21,7 @@ export default function Home() {
     </header>
 
     <section id="top" className="hero section-wrap">
-      <div className="hero-copy"><p className="eyebrow">Hyderabadi dum kitchen · Penang</p><h1>Hyderabadi dum<br/><em>for your table.</em></h1><p className="hero-text">The flavours I grew up with in Hyderabad, prepared in small weekend batches here in Penang.</p><a className="button" href="/menu">Browse this weekend’s menu <span>→</span></a><p className="fine-print">Advance pre-orders · Self-pickup or delivery request</p></div>
+      <div className="hero-copy"><p className="eyebrow">Hyderabadi dum kitchen · Penang</p><h1>Hyderabadi dum<br/><em>for your table.</em></h1><p className="hero-text">The flavours I grew up with in Hyderabad, prepared in small weekend batches from our home kitchen in Penang.</p><a className="button" href="/menu">Browse this weekend’s menu <span>→</span></a><p className="fine-print">Advance pre-orders · Self-pickup or delivery request</p></div>
       <figure className="hero-card"><img className="hero-food" src="/method-dum-v3-aligned.png" alt="The Deccan Island cooking pot sealed for dum cooking over a gas flame"/><figcaption><p>Small-batch weekend cooking</p><small>Hyderabad memories · made in Penang</small></figcaption></figure>
     </section>
 
