@@ -9,7 +9,7 @@ const steps = [
 const methodSteps = [
   ['01', 'Freshly Pounded', 'Whole spices are pounded shortly before marination, fresh for the cooking batch.', '/method-spices.png'],
   ['02', 'Marinated with Care', 'Chicken rests with yogurt, freshly prepared spices and aromatics for around 2–3 hours.', '/method-marination.png'],
-  ['03', 'Sealed Dum Cooking', 'Marinated chicken and partially cooked basmati rice finish together in a sealed pot.', '/method-dum.png'],
+  ['03', 'Sealed Dum Cooking', 'Marinated chicken and partially cooked basmati rice finish together in a sealed pot.', '/method-dum-seal-detail.png'],
 ];
 
 export default function Home() {
