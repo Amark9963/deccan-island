@@ -1,5 +1,5 @@
 'use client';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { resolveProductImage } from '@/lib/product-image';
 import OptimizedFoodImage from '../components/OptimizedFoodImage';
 
@@ -24,6 +24,7 @@ const deadlineFullLabel = (value?:string|null) => value ? new Intl.DateTimeForma
 
 export default function PreOrderForm() {
   const [dates,setDates] = useState<ServiceDate[]>([]);
+  const [activeMonth,setActiveMonth] = useState('');
   const [cart,setCart] = useState<CartItem[]>([]);
   const [dateId,setDateId] = useState('');
   const [windowId,setWindowId] = useState('');
@@ -37,17 +38,42 @@ export default function PreOrderForm() {
   const [message,setMessage] = useState('');
   const [loading,setLoading] = useState(true);
   const [submitting,setSubmitting] = useState(false);
+  const timeSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch('/api/availability').then(async response => {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
-      setDates(data.dates ?? []);
+      const availableDates = (data.dates ?? []) as ServiceDate[];
+      setDates(availableDates);
+      setActiveMonth(availableDates[0]?.service_date.slice(0, 7) ?? '');
       const saved = JSON.parse(localStorage.getItem('deccan-cart') || '{}') as Record<string,number>;
       const products = (data.products ?? []) as Product[];
       setCart(products.filter(product => saved[product.id] > 0).map(product => ({ ...product, quantity:saved[product.id] })));
     }).catch(error => setMessage(error.message)).finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (fulfillment !== 'pickup' || !dateId) return;
+    const frame = requestAnimationFrame(() => {
+      timeSectionRef.current?.scrollIntoView({ behavior:'smooth', block:'nearest' });
+      timeSectionRef.current?.focus({ preventScroll:true });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [dateId, fulfillment]);
+
+  const monthOptions = useMemo(() => {
+    const months = new Map<string,string>();
+    dates.forEach(date => {
+      const key = date.service_date.slice(0, 7);
+      if (!months.has(key)) {
+        months.set(key, new Intl.DateTimeFormat('en-MY', { month:'long', timeZone:'Asia/Kuala_Lumpur' }).format(localDate(date.service_date)));
+      }
+    });
+    return Array.from(months, ([key,label]) => ({ key,label }));
+  }, [dates]);
+
+  const visibleDates = dates.filter(date => date.service_date.startsWith(activeMonth));
 
   const selectedDate = dates.find(date => date.id === dateId);
   const selectedWindow = selectedDate?.pickup_windows.find(window => window.id === windowId);
@@ -97,8 +123,17 @@ export default function PreOrderForm() {
         <label className={fulfillment==='delivery'?'selected':''}><input type="radio" name="fulfillment" checked={fulfillment==='delivery'} onChange={() => selectFulfillment('delivery')}/><span><b>Delivery request</b><small>Choose a date; timing is confirmed by WhatsApp</small></span></label>
       </div></fieldset>
       {fulfillment ? <div className="date-time-fields">
-        <div className="date-slot-field"><span className="field-label">Service date</span><div className="date-slot-list">{dates.map(date => { const parts=dateParts(date.service_date); const closes=deadlineShortLabel(date.booking_deadline); return <button type="button" aria-label={`${dateLabel(date.service_date)}${closes ? `. Orders close ${closes}` : ''}`} aria-pressed={dateId===date.id} className={dateId===date.id?'date-slot selected':'date-slot'} key={date.id} onClick={() => { setDateId(date.id); setWindowId(''); setMessage(''); }}><span>{parts.weekday}</span><strong>{parts.day}</strong><small>{parts.month}</small>{closes && <em>Closes {closes}</em>}</button>; })}</div>{selectedDate?.booking_deadline && <p className="date-deadline">Orders close {deadlineFullLabel(selectedDate.booking_deadline)}.</p>}{!dates.length && <p className="field-hint">No service dates are currently available.</p>}</div>
-        {fulfillment === 'pickup' ? <div className="time-slot-field"><span className="field-label">Collection time</span><div className="time-slot-list">{selectedDate?.pickup_windows.map(window => <button type="button" aria-pressed={windowId===window.id} className={windowId===window.id?'time-slot selected':'time-slot'} key={window.id} onClick={() => { setWindowId(window.id); setMessage(''); }}>{timeLabel(window.starts_at)} – {timeLabel(window.ends_at)}</button>)}</div>{!selectedDate && <p className="field-hint">Select a date to see available times.</p>}{selectedDate && !selectedDate.pickup_windows.length && <p className="field-hint">No collection times are available for this date.</p>}</div> : <div className="delivery-schedule-note"><strong>Delivery timing</strong><p>We’ll confirm the rider time and fee with you on WhatsApp after reviewing your address.</p></div>}
+        <div className="date-slot-field">
+          <span className="field-label">Service date</span>
+          {monthOptions.length > 1 && <div className="month-tabs" role="tablist" aria-label="Service month">{monthOptions.map(month => <button type="button" role="tab" aria-selected={activeMonth===month.key} className={activeMonth===month.key?'month-tab active':'month-tab'} key={month.key} onClick={() => { setActiveMonth(month.key); setDateId(''); setWindowId(''); setMessage(''); }}>{month.label}</button>)}</div>}
+          <div className="date-slot-list" aria-label="Available service dates">{visibleDates.map(date => { const parts=dateParts(date.service_date); const closes=deadlineShortLabel(date.booking_deadline); return <button type="button" aria-label={`${dateLabel(date.service_date)}${closes ? `. Orders close ${closes}` : ''}`} aria-pressed={dateId===date.id} className={dateId===date.id?'date-slot selected':'date-slot'} key={date.id} onClick={() => { setDateId(date.id); setWindowId(''); setMessage(''); }}><span>{parts.weekday}</span><strong>{parts.day}</strong><small>{parts.month}</small></button>; })}</div>
+          {visibleDates.length > 3 && <p className="date-rail-hint">Swipe to see more dates</p>}
+          {selectedDate?.booking_deadline && <p className="date-deadline">Orders close {deadlineFullLabel(selectedDate.booking_deadline)}.</p>}
+          {!selectedDate && dates.length > 0 && <p className="field-hint">Choose a date to continue.</p>}
+          {!dates.length && <p className="field-hint">No service dates are currently available.</p>}
+        </div>
+        {fulfillment === 'pickup' && selectedDate ? <div className="time-slot-field" ref={timeSectionRef} tabIndex={-1} aria-live="polite"><span className="field-label">Collection time</span><div className="time-slot-list">{selectedDate.pickup_windows.map(window => <button type="button" aria-pressed={windowId===window.id} className={windowId===window.id?'time-slot selected':'time-slot'} key={window.id} onClick={() => { setWindowId(window.id); setMessage(''); }}>{timeLabel(window.starts_at)} – {timeLabel(window.ends_at)}</button>)}</div>{!selectedDate.pickup_windows.length && <p className="field-hint">No collection times are available for this date.</p>}</div> : null}
+        {fulfillment === 'delivery' && selectedDate ? <div className="delivery-schedule-note"><strong>Delivery timing</strong><p>We’ll confirm the rider time and fee with you on WhatsApp after reviewing your address.</p></div> : null}
       </div> : <div className="fulfillment-hint">Select self-pickup or delivery to choose a service date.</div>}
       <button className="button checkout-button" disabled={!serviceReady} onClick={() => { setMessage(''); setStep(2); }}>Continue <span>→</span></button>
     </section> : step === 2 ? <form onSubmit={event => { event.preventDefault(); setMessage(''); setStep(3); }}>

@@ -490,9 +490,7 @@ a {
 }
 
 .date-time-fields {
-  display: grid;
-  gap: 18px;
-  grid-template-columns: 1fr 1fr;
+  display: block;
 }
 
 .date-slot-field,
@@ -508,15 +506,52 @@ a {
   margin-bottom: 9px;
 }
 
+.month-tabs {
+  background: rgba(31, 74, 50, .07);
+  border-radius: 999px;
+  display: flex;
+  gap: 4px;
+  margin: 0 0 14px;
+  max-width: 100%;
+  padding: 4px;
+  width: max-content;
+}
+
+.month-tab {
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  color: var(--green);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  min-height: 38px;
+  padding: 0 16px;
+}
+
+.month-tab.active {
+  background: var(--green);
+  color: var(--ivory);
+}
+
 .date-slot-list {
-  display: grid;
-  gap: 8px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  gap: 10px;
+  margin: 0 -2px;
+  overflow-x: auto;
+  padding: 2px 2px 10px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.date-slot-list::-webkit-scrollbar {
+  display: none;
 }
 
 .time-slot-list {
   display: grid;
   gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .date-slot,
@@ -530,11 +565,14 @@ a {
 }
 
 .date-slot {
-  align-items: baseline;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  min-height: 78px;
-  text-align: left;
+  align-items: center;
+  display: flex;
+  flex: 0 0 92px;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 98px;
+  scroll-snap-align: start;
+  text-align: center;
 }
 
 .date-slot > span {
@@ -545,8 +583,8 @@ a {
 }
 
 .date-slot > strong {
-  font: 600 26px/1 Fraunces;
-  grid-row: 1 / 4;
+  font: 600 30px/1 Fraunces;
+  margin: 6px 0 4px;
 }
 
 .date-slot > small {
@@ -555,12 +593,11 @@ a {
   margin-top: 4px;
 }
 
-.date-slot > em {
-  color: var(--copper);
+.date-rail-hint {
+  color: var(--di-text-muted);
   font-size: 10px;
-  font-style: normal;
-  font-weight: 700;
-  margin-top: 7px;
+  margin: 0 0 10px;
+  text-align: right;
 }
 
 .date-deadline {
@@ -578,6 +615,12 @@ a {
   font-size: 13px;
   text-align: center;
   width: 100%;
+}
+
+.time-slot-field {
+  margin-top: 18px;
+  outline: none;
+  scroll-margin: 100px 0 110px;
 }
 
 .date-slot.selected,
@@ -1016,7 +1059,7 @@ a {
   }
 
   .date-slot {
-    min-height: 78px;
+    min-height: 96px;
   }
 
   .date-time-fields {
@@ -1029,8 +1072,13 @@ a {
     margin: 18px 0;
   }
 
-  .date-slot-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .month-tabs {
+    width: 100%;
+  }
+
+  .month-tab {
+    flex: 1;
+    padding: 0 10px;
   }
 
   .review-box {
