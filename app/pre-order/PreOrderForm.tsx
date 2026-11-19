@@ -1,10 +1,11 @@
 'use client';
 import { FormEvent, useEffect, useState } from 'react';
 import { resolveProductImage } from '@/lib/product-image';
+import OptimizedFoodImage from '../components/OptimizedFoodImage';
 
 type Product = { id:string; name:string; description:string; price_myr:number; image_url?:string };
 type Window = { id:string; starts_at:string; ends_at:string; capacity:number };
-type ServiceDate = { id:string; service_date:string; pickup_windows:Window[]; products?:Product[] };
+type ServiceDate = { id:string; service_date:string; pickup_windows:Window[] };
 type CartItem = Product & { quantity:number };
 
 const localDate = (value:string) => new Date(`${value}T12:00:00+08:00`);
@@ -41,7 +42,7 @@ export default function PreOrderForm() {
       if (!response.ok) throw new Error(data.error);
       setDates(data.dates ?? []);
       const saved = JSON.parse(localStorage.getItem('deccan-cart') || '{}') as Record<string,number>;
-      const products = (data.dates?.[0]?.products ?? []) as Product[];
+      const products = (data.products ?? []) as Product[];
       setCart(products.filter(product => saved[product.id] > 0).map(product => ({ ...product, quantity:saved[product.id] })));
     }).catch(error => setMessage(error.message)).finally(() => setLoading(false));
   }, []);
@@ -88,7 +89,7 @@ export default function PreOrderForm() {
     <div className="checkout-steps" aria-label={`Checkout step ${step} of 3`}><span className={step>=1?'active':''}>01 Receive</span><span className={step>=2?'active':''}>02 Details</span><span className={step>=3?'active':''}>03 Review</span></div>
     {step === 1 ? <section>
       <div className="checkout-heading"><p className="eyebrow">01 · Service</p><h2>How would you like it?</h2><p className="checkout-muted">Choose pickup or delivery to continue.</p></div>
-      <div className="order-summary">{cart.map(item => <div className="order-summary-item" key={item.id}>{resolveProductImage(item) && <img src={resolveProductImage(item)} alt=""/>}<span>{item.quantity} × {item.name}</span><strong>RM{(Number(item.price_myr)*item.quantity).toFixed(2)}</strong></div>)}<div className="order-summary-total"><span>{totalQty} item{totalQty===1?'':'s'}</span><strong>RM{total.toFixed(2)}</strong></div></div>
+      <div className="order-summary">{cart.map(item => { const image=resolveProductImage(item); return <div className="order-summary-item" key={item.id}>{image && <OptimizedFoodImage src={image} alt="" sizes="52px"/>}<span>{item.quantity} × {item.name}</span><strong>RM{(Number(item.price_myr)*item.quantity).toFixed(2)}</strong></div>; })}<div className="order-summary-total"><span>Food subtotal · {totalQty} item{totalQty===1?'':'s'}</span><strong>RM{total.toFixed(2)}</strong></div></div>
       <fieldset className="fulfillment-choice"><legend>Receive your order</legend><div className="fulfillment-options">
         <label className={fulfillment==='pickup'?'selected':''}><input type="radio" name="fulfillment" checked={fulfillment==='pickup'} onChange={() => selectFulfillment('pickup')}/><span><b>Self-pickup</b><small>Choose a date and collection time</small></span></label>
         <label className={fulfillment==='delivery'?'selected':''}><input type="radio" name="fulfillment" checked={fulfillment==='delivery'} onChange={() => selectFulfillment('delivery')}/><span><b>Delivery request</b><small>Choose a date; timing is confirmed by WhatsApp</small></span></label>
@@ -105,7 +106,7 @@ export default function PreOrderForm() {
       <div className="checkout-actions"><button type="button" className="text-button" onClick={() => setStep(1)}>← Back</button><button className="button checkout-button" type="submit">Review order <span>→</span></button></div>
     </form> : <section>
       <p className="eyebrow">03 · Review</p><h2>Everything look right?</h2><p className="checkout-muted">Submit your order request. You’ll continue to a private status page with the next steps.</p>
-      <div className="review-box"><div className="review-items">{cart.map(item => <span key={item.id}>{item.quantity} × {item.name}</span>)}</div><div className="review-row"><span>Receive</span><strong>{fulfillment==='delivery'?'Delivery request':'Self-pickup'}</strong></div><div className="review-row"><span>When</span><strong>{scheduleSummary}</strong></div>{fulfillment==='delivery' && <div className="review-row"><span>Deliver to</span><strong>{postcode}</strong></div>}<div className="review-total"><span>Order total</span><strong>RM{total.toFixed(2)}</strong></div></div>
+      <div className="review-box"><div className="review-items">{cart.map(item => <span key={item.id}>{item.quantity} × {item.name}</span>)}</div><div className="review-row"><span>Receive</span><strong>{fulfillment==='delivery'?'Delivery request':'Self-pickup'}</strong></div><div className="review-row"><span>When</span><strong>{scheduleSummary}</strong></div>{fulfillment==='delivery' && <div className="review-row"><span>Deliver to</span><strong>{postcode}</strong></div>}<div className="review-total"><span>{fulfillment==='delivery'?'Food subtotal':'Order total'}</span><strong>RM{total.toFixed(2)}</strong></div>{fulfillment==='delivery' && <p className="review-fee-note">Rider fee is confirmed separately on WhatsApp before delivery is arranged.</p>}</div>
       <div className="checkout-actions"><button className="text-button" disabled={submitting} onClick={() => setStep(2)}>← Edit details</button><button className="button checkout-button" disabled={submitting} onClick={() => submit()}>{submitting?'Submitting…':'Submit order'} <span>{submitting?'':'→'}</span></button></div>{message && <p className="checkout-error" role="alert">{message}</p>}
     </section>}
   </div>;

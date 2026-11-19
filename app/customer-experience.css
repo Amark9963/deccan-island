@@ -280,6 +280,96 @@ a {
   margin: 0 0 20px;
 }
 
+.home-service-note {
+  align-items: center;
+  background: var(--di-surface);
+  border: 1px solid var(--di-line);
+  border-left: 4px solid var(--copper);
+  border-radius: var(--di-radius-md);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin: -18px 0 34px;
+  padding: 17px 20px;
+}
+
+.home-service-note.is-coming {
+  border-left-color: var(--kraft);
+}
+
+.home-service-note > span,
+.home-service-note > small {
+  color: var(--di-text-muted);
+  font-size: 13px;
+}
+
+.home-service-note > span {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.home-service-note > strong {
+  font: 500 20px Fraunces;
+}
+
+.menu-card-kicker {
+  color: var(--copper);
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.menu-price {
+  display: grid;
+  gap: 2px;
+}
+
+.menu-price small {
+  color: var(--di-text-muted);
+  font-size: 11px;
+}
+
+.state-retry {
+  background: transparent;
+  border: 1px solid var(--green);
+  border-radius: 999px;
+  color: var(--green);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  min-height: 44px;
+  padding: 0 20px;
+}
+
+.pickup-option {
+  align-items: start;
+  border-top: 1px solid var(--di-line);
+  display: grid;
+  gap: 18px;
+  grid-template-columns: auto 1fr;
+  padding: 22px 0;
+}
+
+.pickup-option > span {
+  color: var(--copper);
+  font: 18px Fraunces;
+}
+
+.pickup-option h3 {
+  color: var(--green);
+  font: 500 25px Fraunces;
+  margin: 0 0 8px;
+}
+
+.pickup-option p {
+  margin: 0;
+}
+
 .how-note {
   border-top: 1px solid rgba(247, 238, 221, .22);
   color: #ced8cd;
@@ -569,6 +659,15 @@ a {
   font: 600 30px Fraunces;
 }
 
+.review-fee-note {
+  border-top: 1px solid var(--di-line);
+  color: var(--di-text-muted);
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 14px 0 0;
+  padding-top: 14px;
+}
+
 .checkout-error {
   background: rgba(184, 88, 31, .08);
   border-left: 3px solid var(--copper);
@@ -708,6 +807,14 @@ a {
   .home-menu-grid,
   .home-menu-loading {
     grid-template-columns: 1fr;
+  }
+
+  .home-service-note {
+    align-items: flex-start;
+    display: grid;
+    gap: 5px;
+    margin: -4px 0 28px;
+    padding: 16px;
   }
 
   .home-menu-card-copy {

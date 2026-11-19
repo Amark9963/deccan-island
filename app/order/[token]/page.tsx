@@ -43,7 +43,7 @@ export default async function OrderStatusPage({ params }:{ params:{ token:string
           <div><span>{order.fulfillment_type==='delivery'?'Delivery area':'Pickup date'}</span><strong>{order.fulfillment_type==='delivery' ? order.delivery_postcode : serviceDate?.service_date ? formatDate(serviceDate.service_date) : 'To be confirmed'}</strong></div>
           <div><span>{order.fulfillment_type==='delivery'?'Delivery status':'Pickup window'}</span><strong>{order.fulfillment_type==='delivery' ? deliveryLabel : pickupWindow ? `${formatTime(pickupWindow.starts_at)} – ${formatTime(pickupWindow.ends_at)}` : 'To be confirmed'}</strong></div>
         </div>
-        <div className="status-total"><span>Order total</span><strong>RM{Number(order.total_myr).toFixed(2)}</strong></div>
+        <div className="status-total"><span>{order.fulfillment_type==='delivery'?'Food subtotal':'Order total'}</span><strong>RM{Number(order.total_myr).toFixed(2)}</strong></div>
         {order.fulfillment_type==='delivery' && <div className="payment-note"><strong>Delivery request · {deliveryLabel}</strong><p>Your delivery is coordinated manually. Rider timing and fee will be confirmed separately by WhatsApp.</p></div>}
         {order.status==='awaiting_payment' && <div className="payment-note"><strong>Payment is still pending.</strong><p>DuitNow payment instructions will be provided by Deccan Island.</p>{order.payment_deadline && <small>Payment deadline: {new Date(order.payment_deadline).toLocaleString('en-MY',{timeZone:'Asia/Kuala_Lumpur'})} MYT</small>}</div>}
       </section>
