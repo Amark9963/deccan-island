@@ -5,7 +5,7 @@ import OptimizedFoodImage from '../components/OptimizedFoodImage';
 
 type Product = { id:string; name:string; description:string; price_myr:number; image_url?:string };
 type Window = { id:string; starts_at:string; ends_at:string; capacity:number };
-type ServiceDate = { id:string; service_date:string; pickup_windows:Window[] };
+type ServiceDate = { id:string; service_date:string; booking_deadline?:string|null; pickup_windows:Window[] };
 type CartItem = Product & { quantity:number };
 
 const localDate = (value:string) => new Date(`${value}T12:00:00+08:00`);
@@ -19,6 +19,8 @@ const dateParts = (value:string) => {
   };
 };
 const timeLabel = (value:string) => new Intl.DateTimeFormat('en-MY', { hour:'numeric', minute:'2-digit', hour12:true, timeZone:'Asia/Kuala_Lumpur' }).format(new Date(`1970-01-01T${value}+08:00`));
+const deadlineShortLabel = (value?:string|null) => value ? new Intl.DateTimeFormat('en-MY', { weekday:'short', hour:'numeric', minute:'2-digit', hour12:true, timeZone:'Asia/Kuala_Lumpur' }).format(new Date(value)) : null;
+const deadlineFullLabel = (value?:string|null) => value ? new Intl.DateTimeFormat('en-MY', { weekday:'long', day:'numeric', month:'long', hour:'numeric', minute:'2-digit', hour12:true, timeZone:'Asia/Kuala_Lumpur' }).format(new Date(value)) : null;
 
 export default function PreOrderForm() {
   const [dates,setDates] = useState<ServiceDate[]>([]);
@@ -95,7 +97,7 @@ export default function PreOrderForm() {
         <label className={fulfillment==='delivery'?'selected':''}><input type="radio" name="fulfillment" checked={fulfillment==='delivery'} onChange={() => selectFulfillment('delivery')}/><span><b>Delivery request</b><small>Choose a date; timing is confirmed by WhatsApp</small></span></label>
       </div></fieldset>
       {fulfillment ? <div className="date-time-fields">
-        <div className="date-slot-field"><span className="field-label">Service date</span><div className="date-slot-list">{dates.map(date => { const parts=dateParts(date.service_date); return <button type="button" aria-pressed={dateId===date.id} className={dateId===date.id?'date-slot selected':'date-slot'} key={date.id} onClick={() => { setDateId(date.id); setWindowId(''); setMessage(''); }}><span>{parts.weekday}</span><strong>{parts.day}</strong><small>{parts.month}</small></button>; })}</div>{!dates.length && <p className="field-hint">No service dates are currently available.</p>}</div>
+        <div className="date-slot-field"><span className="field-label">Service date</span><div className="date-slot-list">{dates.map(date => { const parts=dateParts(date.service_date); const closes=deadlineShortLabel(date.booking_deadline); return <button type="button" aria-label={`${dateLabel(date.service_date)}${closes ? `. Orders close ${closes}` : ''}`} aria-pressed={dateId===date.id} className={dateId===date.id?'date-slot selected':'date-slot'} key={date.id} onClick={() => { setDateId(date.id); setWindowId(''); setMessage(''); }}><span>{parts.weekday}</span><strong>{parts.day}</strong><small>{parts.month}</small>{closes && <em>Closes {closes}</em>}</button>; })}</div>{selectedDate?.booking_deadline && <p className="date-deadline">Orders close {deadlineFullLabel(selectedDate.booking_deadline)}.</p>}{!dates.length && <p className="field-hint">No service dates are currently available.</p>}</div>
         {fulfillment === 'pickup' ? <div className="time-slot-field"><span className="field-label">Collection time</span><div className="time-slot-list">{selectedDate?.pickup_windows.map(window => <button type="button" aria-pressed={windowId===window.id} className={windowId===window.id?'time-slot selected':'time-slot'} key={window.id} onClick={() => { setWindowId(window.id); setMessage(''); }}>{timeLabel(window.starts_at)} – {timeLabel(window.ends_at)}</button>)}</div>{!selectedDate && <p className="field-hint">Select a date to see available times.</p>}{selectedDate && !selectedDate.pickup_windows.length && <p className="field-hint">No collection times are available for this date.</p>}</div> : <div className="delivery-schedule-note"><strong>Delivery timing</strong><p>We’ll confirm the rider time and fee with you on WhatsApp after reviewing your address.</p></div>}
       </div> : <div className="fulfillment-hint">Select self-pickup or delivery to choose a service date.</div>}
       <button className="button checkout-button" disabled={!serviceReady} onClick={() => { setMessage(''); setStep(2); }}>Continue <span>→</span></button>
