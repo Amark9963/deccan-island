@@ -6,10 +6,7 @@ import PageIntro from '../components/PageIntro';
 import OptimizedFoodImage from '../components/OptimizedFoodImage';
 import { resolveProductImage } from '@/lib/product-image';
 import { formatBookingDeadline, formatServiceDate } from '@/lib/service-format';
-
-type Product = { id:string; name:string; description:string; price_myr:number; image_url?:string };
-type DateProduct = Product & { capacity:number; remaining:number };
-type ServiceDate = { id:string; service_date:string; booking_deadline?:string|null; remaining:number; products:DateProduct[] };
+import type { AvailabilityData, Product, ServiceDate } from '@/lib/availability';
 
 const parts = (value:string) => { const date = new Date(`${value}T12:00:00+08:00`); return {
   weekday: new Intl.DateTimeFormat('en-MY',{weekday:'short',timeZone:'Asia/Kuala_Lumpur'}).format(date),
@@ -17,15 +14,16 @@ const parts = (value:string) => { const date = new Date(`${value}T12:00:00+08:00
   month: new Intl.DateTimeFormat('en-MY',{month:'short',timeZone:'Asia/Kuala_Lumpur'}).format(date),
 }; };
 
-export default function MenuClient() {
-  const [dates,setDates] = useState<ServiceDate[]>([]);
+export default function MenuClient({ initialData }: { initialData?: AvailabilityData }) {
+  const [dates,setDates] = useState<ServiceDate[]>(initialData?.dates ?? []);
   const [cart,setCart] = useState<Record<string,number>>({});
-  const [dateId,setDateId] = useState('');
-  const [loading,setLoading] = useState(true);
+  const [dateId,setDateId] = useState(initialData?.dates[0]?.id ?? '');
+  const [loading,setLoading] = useState(!initialData);
   const [error,setError] = useState(false);
 
-  const loadMenu = useCallback(() => {
-    setLoading(true); setError(false);
+  const loadMenu = useCallback((showLoading = true) => {
+    if (showLoading) setLoading(true);
+    setError(false);
     fetch('/api/availability').then(async response => {
       const data = await response.json(); if (!response.ok) throw new Error(data.error);
       const availableDates = (data.dates ?? []) as ServiceDate[]; setDates(availableDates);
@@ -38,7 +36,7 @@ export default function MenuClient() {
     }).catch(() => { setDates([]); setError(true); }).finally(() => setLoading(false));
   }, []);
 
-  useEffect(() => { loadMenu(); try { setCart(JSON.parse(localStorage.getItem('deccan-cart') || '{}')); } catch { setCart({}); } }, [loadMenu]);
+  useEffect(() => { loadMenu(!initialData); try { setCart(JSON.parse(localStorage.getItem('deccan-cart') || '{}')); } catch { setCart({}); } }, [loadMenu, initialData]);
 
   const selectedDate=dates.find(date=>date.id===dateId);
   const visibleProducts=selectedDate?.products ?? [];
@@ -79,7 +77,7 @@ export default function MenuClient() {
         <div>{deadline && <p><span>Order by</span><strong>{deadline}</strong></p>}{selectedDate && <small>{selectedDate.remaining} of 15 total portions currently available.</small>}{!orderingOpen && <small>Ordering reopens when a service date is published.</small>}</div>
       </section>}
 
-      {loading ? <div className="menu-loading" aria-label="Loading menu"><span/><span/></div> : error ? <section className="menu-state customer-card" role="alert"><strong>We couldn’t load the menu.</strong><p>Please check your connection and try again.</p><button className="state-retry" type="button" onClick={loadMenu}>Try again</button></section> : visibleProducts.length ? <div className="menu-grid">
+      {loading ? <div className="menu-loading" aria-label="Loading menu"><span/><span/></div> : error ? <section className="menu-state customer-card" role="alert"><strong>We couldn’t load the menu.</strong><p>Please check your connection and try again.</p><button className="state-retry" type="button" onClick={() => loadMenu()}>Try again</button></section> : visibleProducts.length ? <div className="menu-grid">
         {visibleProducts.map(product => { const image=resolveProductImage(product); const soldOut=product.remaining<=0 || (selectedDate?.remaining ?? 0)<=0; return <article className={`menu-card customer-card${soldOut?' is-sold-out':''}`} key={product.id}>
           {image && <OptimizedFoodImage src={image} alt={product.name} sizes="(max-width: 700px) calc(100vw - 36px), 50vw" />}
           <div className="menu-card-body">
