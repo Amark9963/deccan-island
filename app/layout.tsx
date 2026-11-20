@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     title: 'Deccan Island | Hyderabadi Biryani in Penang',
     description: siteDescription,
     images: [{
-      url: '/opengraph-image',
+      url: '/opengraph-image?v=2',
       width: 1200,
       height: 630,
       alt: 'Deccan Island — Hyderabadi dum kitchen in Penang',
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Deccan Island | Hyderabadi Biryani in Penang',
     description: siteDescription,
-    images: ['/opengraph-image'],
+    images: ['/opengraph-image?v=2'],
   },
   robots: {
     index: true,
