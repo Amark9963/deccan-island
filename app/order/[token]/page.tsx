@@ -1,11 +1,16 @@
 import { createHash } from 'node:crypto';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import CustomerHeader from '@/app/components/CustomerHeader';
 import PageIntro from '@/app/components/PageIntro';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import './order-status.css';
 
 export const dynamic = 'force-dynamic';
+export const metadata: Metadata = {
+  title: 'Private Order Status',
+  robots: { index: false, follow: false, noarchive: true },
+};
 
 const formatDate = (value:string) => new Intl.DateTimeFormat('en-MY', { weekday:'long', day:'numeric', month:'long', year:'numeric', timeZone:'Asia/Kuala_Lumpur' }).format(new Date(`${value}T12:00:00+08:00`));
 const formatTime = (value:string) => new Intl.DateTimeFormat('en-MY', { hour:'numeric', minute:'2-digit', hour12:true, timeZone:'Asia/Kuala_Lumpur' }).format(new Date(`1970-01-01T${value}+08:00`));
