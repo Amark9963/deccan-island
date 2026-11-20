@@ -11,10 +11,10 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: '#1F4A32',
     icons: [
       {
-        src: '/deccan-island-logo.svg',
+        src: '/icon.svg',
         sizes: 'any',
         type: 'image/svg+xml',
-        purpose: 'any',
+        purpose: 'maskable',
       },
     ],
   };

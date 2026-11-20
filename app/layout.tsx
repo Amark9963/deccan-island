@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   creator: 'Deccan Island',
   publisher: 'Deccan Island',
   alternates: { canonical: '/' },
-  icons: { icon: '/deccan-island-logo.svg', shortcut: '/deccan-island-logo.svg' },
+  icons: { icon: '/icon.svg', shortcut: '/icon.svg' },
   manifest: '/manifest.webmanifest',
   openGraph: {
     type: 'website',
