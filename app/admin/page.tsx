@@ -7,6 +7,8 @@ import { AdminOrderActions } from "./AdminOrderActions";
 import AdminWindowControls from "./AdminWindowControls";
 import AdminDateMenuControls from "./AdminDateMenuControls";
 import AdminSignOut from "./AdminSignOut";
+import AdminWorkspace from "./AdminWorkspace";
+import "./admin-workspace.css";
 export const dynamic = "force-dynamic";
 export default async function AdminPage() {
   const supabase = await getSupabaseServer();
@@ -109,15 +111,13 @@ export default async function AdminPage() {
             <strong>{(dates ?? []).filter((d) => d.enabled).length}</strong>
           </div>
         </div>
-        <section className="admin-section">
+        <AdminWorkspace>
+        <section className="admin-section admin-panel" data-admin-panel="calendar">
           <div className="admin-section-heading">
             <div>
               <p className="eyebrow">Service dates</p>
               <h2>Weekend calendar</h2>
             </div>
-            <a className="admin-secondary" href="/api/admin/export">
-              Export orders CSV
-            </a>
           </div>
           <div className="admin-table">
             {(dates ?? []).map((date) => (
@@ -148,13 +148,25 @@ export default async function AdminPage() {
             ))}
           </div>
         </section>
-        <AdminDateMenuControls dates={dateOptions} />
-        <section className="admin-section">
+        <div className="admin-panel" data-admin-panel="calendar">
+          <div className="admin-tools-grid">
+            <AdminControls view="dates" />
+            <AdminWindowControls dates={dateOptions} />
+          </div>
+        </div>
+        <div className="admin-panel" data-admin-panel="menu">
+          <AdminDateMenuControls dates={dateOptions} />
+          <AdminControls view="products" />
+        </div>
+        <section className="admin-section admin-panel" data-admin-panel="orders">
           <div className="admin-section-heading">
             <div>
               <p className="eyebrow">Recent orders</p>
               <h2>Order queue</h2>
             </div>
+            <a className="admin-secondary" href="/api/admin/export">
+              Export CSV
+            </a>
           </div>
           <div className="admin-table">
             {(orders ?? []).slice(0, 8).map((order) => (
@@ -195,8 +207,7 @@ export default async function AdminPage() {
             )}
           </div>
         </section>
-        <AdminControls />
-        <AdminWindowControls dates={dateOptions} />
+        </AdminWorkspace>
       </div>
     </main>
   );
