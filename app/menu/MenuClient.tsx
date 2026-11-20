@@ -7,7 +7,7 @@ import PageIntro from '../components/PageIntro';
 import OptimizedFoodImage from '../components/OptimizedFoodImage';
 import { resolveProductImage } from '@/lib/product-image';
 import { formatBookingDeadline, formatServiceDate } from '@/lib/service-format';
-import type { AvailabilityData, Product, ServiceDate } from '@/lib/availability';
+import type { AvailabilityData, ServiceDate } from '@/lib/availability';
 
 const parts = (value:string) => { const date = new Date(`${value}T12:00:00+08:00`); return {
   weekday: new Intl.DateTimeFormat('en-MY',{weekday:'short',timeZone:'Asia/Kuala_Lumpur'}).format(date),

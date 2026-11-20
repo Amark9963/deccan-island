@@ -1,6 +1,6 @@
 'use client';
 
-import type { MouseEvent, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { track } from '@vercel/analytics';
 
 type EventProperties = Record<string, string | number | boolean | null | undefined>;
@@ -22,7 +22,7 @@ export default function TrackedLink({
   target?: string;
   rel?: string;
 }) {
-  function handleClick(_event: MouseEvent<HTMLAnchorElement>) {
+  function handleClick() {
     track(eventName, eventProperties);
   }
 

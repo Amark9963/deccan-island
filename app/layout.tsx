@@ -95,5 +95,5 @@ const businessStructuredData = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en-MY"><body><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(businessStructuredData) }} />{children}<MobileNavigation /><Analytics /></body></html>;
+  return <html lang="en-MY" data-scroll-behavior="smooth"><body><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(businessStructuredData) }} />{children}<MobileNavigation /><Analytics /></body></html>;
 }

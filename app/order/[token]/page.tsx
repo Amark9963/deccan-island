@@ -16,8 +16,9 @@ export const metadata: Metadata = {
 const formatDate = (value:string) => new Intl.DateTimeFormat('en-MY', { weekday:'long', day:'numeric', month:'long', year:'numeric', timeZone:'Asia/Kuala_Lumpur' }).format(new Date(`${value}T12:00:00+08:00`));
 const formatTime = (value:string) => new Intl.DateTimeFormat('en-MY', { hour:'numeric', minute:'2-digit', hour12:true, timeZone:'Asia/Kuala_Lumpur' }).format(new Date(`1970-01-01T${value}+08:00`));
 
-export default async function OrderStatusPage({ params }:{ params:{ token:string } }) {
-  const hash = createHash('sha256').update(params.token).digest('hex');
+export default async function OrderStatusPage({ params }:{ params:Promise<{ token:string }> }) {
+  const { token } = await params;
+  const hash = createHash('sha256').update(token).digest('hex');
   let order;
   try {
     const result = await getSupabaseAdmin().from('orders').select('order_reference,status,payment_status,quantity,total_myr,payment_deadline,fulfillment_type,delivery_status,delivery_postcode,products(name),service_dates(service_date),pickup_windows(starts_at,ends_at),order_items(product_name,quantity,line_total_myr)').eq('public_token_hash',hash).maybeSingle();
