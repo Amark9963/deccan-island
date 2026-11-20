@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { track } from '@vercel/analytics';
 import './cart.css';
 import CustomerHeader from '../components/CustomerHeader';
 import PageIntro from '../components/PageIntro';
@@ -55,7 +56,7 @@ export default function CartPage(){
         <div className="cart-total"><span>Food subtotal</span><strong>RM{total.toFixed(2)}</strong></div>
         <p className="cart-next-note">Next, choose self-pickup or delivery. Pickup customers will then select a collection time.</p>
         {unavailableItems.length>0&&<div className="cart-closed-note"><strong>Your selected date has changed availability</strong><p>Return to the menu to remove or replace unavailable dishes before checkout.</p></div>}
-        {canCheckout?<a className="button cart-continue" href="/pre-order">Choose pickup or delivery <span>→</span></a>:<a className="button cart-continue" href="/menu">Review this date’s menu <span>→</span></a>}
+        {canCheckout?<a className="button cart-continue" href="/pre-order" onClick={() => track('Begin Checkout', { items:totalQty, total_myr:Number(total.toFixed(2)) })}>Choose pickup or delivery <span>→</span></a>:<a className="button cart-continue" href="/menu">Review this date’s menu <span>→</span></a>}
         <a className="cart-edit" href="/menu">Continue browsing</a>
       </section>}
     </div>

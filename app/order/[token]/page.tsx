@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import CustomerHeader from '@/app/components/CustomerHeader';
 import PageIntro from '@/app/components/PageIntro';
+import TrackedLink from '@/app/components/TrackedLink';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import './order-status.css';
 
@@ -60,7 +61,7 @@ export default async function OrderStatusPage({ params }:{ params:{ token:string
         {order.fulfillment_type==='delivery' && <div className="payment-note"><strong>Delivery request · {deliveryLabel}</strong><p>Your delivery is coordinated manually. Rider timing and fee will be confirmed separately by WhatsApp.</p></div>}
         {order.status==='awaiting_payment' && <div className="payment-note"><strong>Complete your order on WhatsApp.</strong><p>We’ll share payment instructions privately and confirm your order after payment is received.</p>{order.payment_deadline && <small>Your portions are held until {new Date(order.payment_deadline).toLocaleString('en-MY',{timeZone:'Asia/Kuala_Lumpur'})} MYT.</small>}</div>}
       </section>
-      <div className="status-actions">{whatsappUrl ? <a className="button" href={whatsappUrl}>{order.status==='awaiting_payment'?'Continue on WhatsApp':'Contact on WhatsApp'} <span>→</span></a> : <p className="status-muted">WhatsApp contact details will be added before launch.</p>}</div>
+      <div className="status-actions">{whatsappUrl ? <TrackedLink className="button" href={whatsappUrl} eventName="Contact Click" eventProperties={{ channel:'whatsapp', source:'order_status', order_status:order.status }}>{order.status==='awaiting_payment'?'Continue on WhatsApp':'Contact on WhatsApp'} <span>→</span></TrackedLink> : <p className="status-muted">WhatsApp contact details will be added before launch.</p>}</div>
     </div>
   </main>;
 }

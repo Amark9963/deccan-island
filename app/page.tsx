@@ -1,5 +1,6 @@
 import HomeMenuPreview from './components/HomeMenuPreview';
 import OptimizedFoodImage from './components/OptimizedFoodImage';
+import TrackedLink from './components/TrackedLink';
 
 const steps = [
   ['01', 'Choose your dishes', 'Browse the live weekend menu and add what you would like us to prepare.'],
@@ -69,6 +70,6 @@ export default function Home() {
 
     <section className="preorder"><div className="section-wrap preorder-inner"><p className="eyebrow">This weekend</p><h2>Choose your dish.<br/><em>We’ll prepare the rest.</em></h2><p>See what is available, add your dishes and choose how you would like to receive them.</p><a className="button button-light" href="/menu">Browse the menu <span>→</span></a></div></section>
 
-    <footer><div className="section-wrap footer-inner"><a className="brand-logo footer-logo" href="#top"><img src="/deccan-island-logo.svg" alt="Deccan Island — Hyderabadi Dum Kitchen" /></a><p>Hyderabadi dum kitchen · Penang Island, Malaysia</p><div className="footer-contact" aria-label="Contact Deccan Island"><a href="https://www.instagram.com/deccanisland/" target="_blank" rel="noreferrer">Instagram</a><a href="https://wa.me/601126466354" target="_blank" rel="noreferrer">WhatsApp</a></div><div className="footer-bottom"><span>© 2026 Deccan Island</span><span>Small-batch weekend cooking</span></div></div></footer>
+    <footer><div className="section-wrap footer-inner"><a className="brand-logo footer-logo" href="#top"><img src="/deccan-island-logo.svg" alt="Deccan Island — Hyderabadi Dum Kitchen" /></a><p>Hyderabadi dum kitchen · Penang Island, Malaysia</p><div className="footer-contact" aria-label="Contact Deccan Island"><TrackedLink href="https://www.instagram.com/deccanisland/" eventName="Contact Click" eventProperties={{ channel:'instagram', source:'footer' }} target="_blank" rel="noreferrer">Instagram</TrackedLink><TrackedLink href="https://wa.me/601126466354" eventName="Contact Click" eventProperties={{ channel:'whatsapp', source:'footer' }} target="_blank" rel="noreferrer">WhatsApp</TrackedLink></div><div className="footer-bottom"><span>© 2026 Deccan Island</span><span>Small-batch weekend cooking</span></div></div></footer>
   </main>;
 }

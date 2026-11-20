@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { track } from '@vercel/analytics';
 import CustomerHeader from '../components/CustomerHeader';
 import PageIntro from '../components/PageIntro';
 import OptimizedFoodImage from '../components/OptimizedFoodImage';
@@ -50,6 +51,7 @@ export default function MenuClient({ initialData }: { initialData?: Availability
     if (delta > 0 && (!product || (cart[id] ?? 0) >= product.remaining || count >= (selectedDate?.remaining ?? 0))) return;
     const next={...cart,[id]:Math.max(0,(cart[id]??0)+delta)}; if(!next[id]) delete next[id];
     setCart(next); localStorage.setItem('deccan-cart',JSON.stringify(next)); window.dispatchEvent(new Event('cart-updated'));
+    if (delta > 0 && product) track('Add to Cart', { product:product.name, price_myr:Number(product.price_myr), cart_items:count + 1 });
   }
 
   function selectDate(nextId:string) {
@@ -87,7 +89,7 @@ export default function MenuClient({ initialData }: { initialData?: Availability
           </div>
         </article>; })}
       </div> : <section className="menu-state customer-card"><strong>This service date has sold out.</strong><p>Choose another available date to see its menu.</p></section>}
-      {count > 0 && orderingOpen && <a className="button menu-continue" href="/cart"><span>View cart · {count} item{count===1?'':'s'}</span><strong>RM{total.toFixed(2)} →</strong></a>}
+      {count > 0 && orderingOpen && <a className="button menu-continue" href="/cart" onClick={() => track('View Cart', { items:count, total_myr:Number(total.toFixed(2)) })}><span>View cart · {count} item{count===1?'':'s'}</span><strong>RM{total.toFixed(2)} →</strong></a>}
     </div>
   </main>;
 }

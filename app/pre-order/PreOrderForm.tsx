@@ -1,5 +1,6 @@
 'use client';
 import { FormEvent, useEffect, useRef, useState } from 'react';
+import { track } from '@vercel/analytics';
 import { resolveProductImage } from '@/lib/product-image';
 import OptimizedFoodImage from '../components/OptimizedFoodImage';
 
@@ -64,6 +65,7 @@ export default function PreOrderForm() {
     setFulfillment(value);
     setWindowId('');
     setMessage('');
+    track('Select Fulfillment', { type:value, items:totalQty, total_myr:Number(total.toFixed(2)) });
   }
 
   async function submit(event?:FormEvent) {
@@ -77,6 +79,7 @@ export default function PreOrderForm() {
         setMessage(data.error ?? 'Unable to create the order');
         return;
       }
+      track('Order Submitted', { type:fulfillment, items:totalQty, total_myr:Number(total.toFixed(2)) });
       localStorage.removeItem('deccan-cart');
       localStorage.removeItem('deccan-service-date');
       window.dispatchEvent(new Event('cart-updated'));
@@ -108,7 +111,7 @@ export default function PreOrderForm() {
         {selectedDate.booking_deadline && <p className="date-deadline">Orders close {deadlineFullLabel(selectedDate.booking_deadline)}.</p>}
       </div> : <div className="fulfillment-hint">Select self-pickup or delivery to continue.</div>}
       <button className="button checkout-button" disabled={!serviceReady} onClick={() => { setMessage(''); setStep(2); }}>Continue <span>→</span></button>
-    </section> : step === 2 ? <form onSubmit={event => { event.preventDefault(); setMessage(''); setStep(3); }}>
+    </section> : step === 2 ? <form onSubmit={event => { event.preventDefault(); setMessage(''); track('Review Order', { type:fulfillment, items:totalQty, total_myr:Number(total.toFixed(2)) }); setStep(3); }}>
       <p className="eyebrow">02 · Your details</p><h2>{fulfillment === 'delivery' ? 'Where should we deliver?' : 'Where should we send your confirmation?'}</h2>
       <label>Name<input required autoComplete="name" value={name} onChange={event => setName(event.target.value)} placeholder="Your name"/></label><label>WhatsApp number<input required type="tel" inputMode="tel" autoComplete="tel" value={phone} onChange={event => setPhone(event.target.value)} placeholder="+60…"/></label>
       {fulfillment === 'delivery' && <div className="delivery-fields"><p className="checkout-muted">Delivery is manually reviewed. The rider fee and timing will be confirmed separately.</p><label>Delivery address<textarea required autoComplete="street-address" value={address} onChange={event => setAddress(event.target.value)} rows={3} placeholder="Building, street and area"/></label><label>Postcode<input required inputMode="numeric" autoComplete="postal-code" value={postcode} onChange={event => setPostcode(event.target.value)} placeholder="e.g. 10350"/></label><label>Rider notes <span className="label-optional">optional</span><textarea value={notes} onChange={event => setNotes(event.target.value)} rows={2} placeholder="Guardhouse, unit or landmark"/></label></div>}

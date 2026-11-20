@@ -4,6 +4,7 @@ import './mobile-polish.css';
 import './premium-mobile.css';
 import './customer-experience.css';
 import type { Metadata } from 'next';
+import { Analytics } from '@vercel/analytics/react';
 import MobileNavigation from './MobileNavigation';
 
 const siteUrl = 'https://www.deccanisland.com';
@@ -94,5 +95,5 @@ const businessStructuredData = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en-MY"><body><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(businessStructuredData) }} />{children}<MobileNavigation /></body></html>;
+  return <html lang="en-MY"><body><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(businessStructuredData) }} />{children}<MobileNavigation /><Analytics /></body></html>;
 }
