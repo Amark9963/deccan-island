@@ -4,7 +4,7 @@ import OptimizedFoodImage from './components/OptimizedFoodImage';
 const steps = [
   ['01', 'Choose your dishes', 'Browse the live weekend menu and add what you would like us to prepare.'],
   ['02', 'Pickup or delivery', 'Select self-pickup or send us a delivery request around Penang Island.'],
-  ['03', 'Choose your date', 'Pick an available service date, add your details and review the order.'],
+  ['03', 'Confirm on WhatsApp', 'Submit your request, then arrange payment privately with us to confirm the order.'],
 ];
 
 const methodSteps = [
@@ -36,7 +36,7 @@ export default function Home() {
 
     <section id="story" className="story-section section-wrap"><div className="story-copy"><p className="eyebrow">From Hyderabad to Penang</p><h2>Rooted in Hyderabad.<br/><em>Made in Penang.</em></h2><p>Growing up in Hyderabad, biryani was part of everyday food culture — familiar aromas, long-grain rice, balanced spices and the anticipation of opening a dum-cooked pot.</p><p>After moving to Penang, I wanted to recreate the flavours I remembered. Cooking for family and friends eventually became Deccan Island — a small weekend kitchen sharing a taste of Hyderabad, one batch at a time.</p><p className="story-signoff">— The founder of Deccan Island</p></div></section>
 
-    <section className="faq section-wrap"><div><p className="eyebrow">Good to know</p><h2>Questions,<br/><em>answered.</em></h2></div><div className="faq-list"><details open><summary>When can I order?</summary><p>The next service date and ordering deadline are shown on the menu. All currently available dates appear during checkout.</p></details><details><summary>How does delivery work?</summary><p>Send us a delivery request with your address. Rider timing and fee are confirmed separately by WhatsApp.</p></details><details><summary>How do I pay?</summary><p>DuitNow instructions follow after your order request is created. Your order is confirmed after payment is verified.</p></details></div></section>
+    <section className="faq section-wrap"><div><p className="eyebrow">Good to know</p><h2>Questions,<br/><em>answered.</em></h2></div><div className="faq-list"><details open><summary>When can I order?</summary><p>The next service date and ordering deadline are shown on the menu. All currently available dates appear during checkout.</p></details><details><summary>How does delivery work?</summary><p>Send us a delivery request with your address. Rider timing and fee are confirmed separately by WhatsApp.</p></details><details><summary>How do I pay?</summary><p>Submit your order on the website, then continue on WhatsApp. We’ll share payment instructions privately and confirm your order once payment is received.</p></details></div></section>
 
     <section className="preorder"><div className="section-wrap preorder-inner"><p className="eyebrow">This weekend</p><h2>Choose your dish.<br/><em>We’ll prepare the rest.</em></h2><p>See what is available, add your dishes and choose how you would like to receive them.</p><a className="button button-light" href="/menu">Browse the menu <span>→</span></a></div></section>
 

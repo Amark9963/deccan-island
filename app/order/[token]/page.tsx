@@ -28,15 +28,23 @@ export default async function OrderStatusPage({ params }:{ params:{ token:string
   const product = Array.isArray(order.products) ? order.products[0] : order.products;
   const items = order.order_items ?? [];
   const whatsappNumber = process.env.WHATSAPP_NUMBER;
-  const whatsappUrl = whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi Deccan Island, I’m contacting you about order ${order.order_reference}.`)}` : null;
+  const whatsappUrl = whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi Deccan Island, I’ve submitted order ${order.order_reference} for RM${Number(order.total_myr).toFixed(2)}. I’d like to arrange payment and confirmation.`)}` : null;
   const deliveryLabel = order.delivery_status?.replaceAll('_',' ');
+  const statusLabel: Record<string,string> = {
+    awaiting_payment: 'Awaiting confirmation',
+    payment_under_review: 'Payment being checked',
+    confirmed: 'Confirmed',
+    collected: 'Collected',
+    expired: 'Expired',
+    cancelled: 'Cancelled',
+  };
 
   return <main className="status-page">
     <CustomerHeader actionHref="/" actionLabel={<>Back home <b aria-hidden="true">→</b></>} />
     <div className="status-wrap">
       <PageIntro eyebrow="Private order status" title="Your order" accent="at a glance." description="Keep this private link to check the latest details for your order." />
       <section className="status-card customer-card">
-        <div className="status-top"><div><span className="status-label">Order reference</span><strong>{order.order_reference}</strong></div><span className={`status-pill status-${order.status}`}>{order.status.replaceAll('_',' ')}</span></div>
+        <div className="status-top"><div><span className="status-label">Order reference</span><strong>{order.order_reference}</strong></div><span className={`status-pill status-${order.status}`}>{statusLabel[order.status] ?? order.status.replaceAll('_',' ')}</span></div>
         <div className="status-grid">
           <div><span>Items</span><strong>{items.length ? items.map(item => `${item.quantity}× ${item.product_name}`).join(', ') : product?.name}</strong></div>
           <div><span>Quantity</span><strong>{order.quantity} portion{order.quantity===1?'':'s'}</strong></div>
@@ -45,9 +53,9 @@ export default async function OrderStatusPage({ params }:{ params:{ token:string
         </div>
         <div className="status-total"><span>{order.fulfillment_type==='delivery'?'Food subtotal':'Order total'}</span><strong>RM{Number(order.total_myr).toFixed(2)}</strong></div>
         {order.fulfillment_type==='delivery' && <div className="payment-note"><strong>Delivery request · {deliveryLabel}</strong><p>Your delivery is coordinated manually. Rider timing and fee will be confirmed separately by WhatsApp.</p></div>}
-        {order.status==='awaiting_payment' && <div className="payment-note"><strong>Payment is still pending.</strong><p>DuitNow payment instructions will be provided by Deccan Island.</p>{order.payment_deadline && <small>Payment deadline: {new Date(order.payment_deadline).toLocaleString('en-MY',{timeZone:'Asia/Kuala_Lumpur'})} MYT</small>}</div>}
+        {order.status==='awaiting_payment' && <div className="payment-note"><strong>Complete your order on WhatsApp.</strong><p>We’ll share payment instructions privately and confirm your order after payment is received.</p>{order.payment_deadline && <small>Your portions are held until {new Date(order.payment_deadline).toLocaleString('en-MY',{timeZone:'Asia/Kuala_Lumpur'})} MYT.</small>}</div>}
       </section>
-      <div className="status-actions">{whatsappUrl ? <a className="button" href={whatsappUrl}>Contact on WhatsApp <span>→</span></a> : <p className="status-muted">WhatsApp contact details will be added before launch.</p>}</div>
+      <div className="status-actions">{whatsappUrl ? <a className="button" href={whatsappUrl}>{order.status==='awaiting_payment'?'Continue on WhatsApp':'Contact on WhatsApp'} <span>→</span></a> : <p className="status-muted">WhatsApp contact details will be added before launch.</p>}</div>
     </div>
   </main>;
 }
