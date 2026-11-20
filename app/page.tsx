@@ -13,8 +13,37 @@ const methodSteps = [
   ['03', 'Sealed Dum Cooking', 'Marinated chicken and partially cooked basmati rice finish together in a sealed pot.', '/method-dum-seal-detail.png'],
 ];
 
+const faqItems = [
+  {
+    question: 'When can I order?',
+    answer: 'The next service date and ordering deadline are shown on the menu. All currently available dates appear during checkout.',
+  },
+  {
+    question: 'How does delivery work?',
+    answer: 'Send us a delivery request with your address. Rider timing and fee are confirmed separately by WhatsApp.',
+  },
+  {
+    question: 'How do I pay?',
+    answer: 'Submit your order on the website, then continue on WhatsApp. We’ll share payment instructions privately and confirm your order once payment is received.',
+  },
+];
+
+const faqStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map(item => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer,
+    },
+  })),
+};
+
 export default function Home() {
   return <main className="home-page">
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }} />
     <header className="home-header">
       <a className="brand-logo" href="#top" aria-label="Deccan Island home"><img src="/deccan-island-logo.svg" alt="Deccan Island — Hyderabadi Dum Kitchen" /></a>
       <nav aria-label="Homepage sections"><a href="#menu">Menu</a><a href="#method">Our method</a><a href="#story">Our story</a></nav>
@@ -36,10 +65,10 @@ export default function Home() {
 
     <section id="story" className="story-section section-wrap"><div className="story-copy"><p className="eyebrow">From Hyderabad to Penang</p><h2>Rooted in Hyderabad.<br/><em>Made in Penang.</em></h2><p>Growing up in Hyderabad, biryani was part of everyday food culture — familiar aromas, long-grain rice, balanced spices and the anticipation of opening a dum-cooked pot.</p><p>After moving to Penang, I wanted to recreate the flavours I remembered. Cooking for family and friends eventually became Deccan Island — a small weekend kitchen sharing a taste of Hyderabad, one batch at a time.</p><p className="story-signoff">— The founder of Deccan Island</p></div></section>
 
-    <section className="faq section-wrap"><div><p className="eyebrow">Good to know</p><h2>Questions,<br/><em>answered.</em></h2></div><div className="faq-list"><details open><summary>When can I order?</summary><p>The next service date and ordering deadline are shown on the menu. All currently available dates appear during checkout.</p></details><details><summary>How does delivery work?</summary><p>Send us a delivery request with your address. Rider timing and fee are confirmed separately by WhatsApp.</p></details><details><summary>How do I pay?</summary><p>Submit your order on the website, then continue on WhatsApp. We’ll share payment instructions privately and confirm your order once payment is received.</p></details></div></section>
+    <section className="faq section-wrap"><div><p className="eyebrow">Good to know</p><h2>Questions,<br/><em>answered.</em></h2></div><div className="faq-list">{faqItems.map((item, index) => <details open={index === 0} key={item.question}><summary>{item.question}</summary><p>{item.answer}</p></details>)}</div></section>
 
     <section className="preorder"><div className="section-wrap preorder-inner"><p className="eyebrow">This weekend</p><h2>Choose your dish.<br/><em>We’ll prepare the rest.</em></h2><p>See what is available, add your dishes and choose how you would like to receive them.</p><a className="button button-light" href="/menu">Browse the menu <span>→</span></a></div></section>
 
-    <footer><div className="section-wrap footer-inner"><a className="brand-logo footer-logo" href="#top"><img src="/deccan-island-logo.svg" alt="Deccan Island — Hyderabadi Dum Kitchen" /></a><p>Hyderabadi dum kitchen · Penang Island, Malaysia</p><div className="footer-bottom"><span>© 2026 Deccan Island</span><span>Small-batch weekend cooking</span></div></div></footer>
+    <footer><div className="section-wrap footer-inner"><a className="brand-logo footer-logo" href="#top"><img src="/deccan-island-logo.svg" alt="Deccan Island — Hyderabadi Dum Kitchen" /></a><p>Hyderabadi dum kitchen · Penang Island, Malaysia</p><div className="footer-contact" aria-label="Contact Deccan Island"><a href="https://www.instagram.com/deccanisland/" target="_blank" rel="noreferrer">Instagram</a><a href="https://wa.me/601126466354" target="_blank" rel="noreferrer">WhatsApp</a></div><div className="footer-bottom"><span>© 2026 Deccan Island</span><span>Small-batch weekend cooking</span></div></div></footer>
   </main>;
 }
